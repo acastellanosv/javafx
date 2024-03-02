@@ -5,12 +5,14 @@ import com.acv.showroom.view.MainView;
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 public class Showroom extends Application{
@@ -18,7 +20,24 @@ public class Showroom extends Application{
 	private static final int WINDOW_WIDTH = 1000;
 	private static final int WINDOW_HEIGHT = 600;
 	
-	public static void main(String[] args) {
+    private PerspectiveCamera camera;
+    private final double sceneWidth = 600;
+    private final double sceneHeight = 600;
+    private double cameraDistance = 5000;
+
+    private double scenex, sceney, scenez = 0;
+    private double fixedXAngle, fixedYAngle, fixedZAngle = 0;
+    private final DoubleProperty angleX = new SimpleDoubleProperty(0);
+    private final DoubleProperty angleY = new SimpleDoubleProperty(0);    
+    private final DoubleProperty angleZ = new SimpleDoubleProperty(0);    
+
+    //Add a Mouse Handler for Rotations
+    Rotate xRotate = new Rotate(0, Rotate.X_AXIS);
+    Rotate yRotate = new Rotate(0, Rotate.Y_AXIS);
+    Rotate zRotate = new Rotate(0, Rotate.Z_AXIS);
+
+    
+    public static void main(String[] args) {
 		launch(args);
 	}
 
@@ -31,17 +50,29 @@ public class Showroom extends Application{
            return;
         }
 
+        
+//        Group sceneRoot = new Group();
+//        Scene scene = new Scene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
+//        scene.setFill(Color.BLACK);
+//        camera = new PerspectiveCamera(true);        
+//        camera.setNearClip(0.1);
+//        camera.setFarClip(10000.0);
+//        camera.setTranslateZ(-1000);
+//        scene.setCamera(camera);
+        
 	    MainView group = new MainView(WINDOW_WIDTH, WINDOW_HEIGHT);
-        var label = new Label("Welcome to Showroom.");
-        group.getChildren().add(label);
-        group.render();
+//	    ShowView group = new ShowView(WINDOW_WIDTH, WINDOW_HEIGHT);
+//        group.getChildren().add(label);
+	    group.render(Color.GREEN);
+	    
+//	    var label = new Label("Welcome to Showroom.");
 
 //		MainPanel group = new MainPanel(WINDOW_WIDTH,WINDOW_HEIGHT);
 //      root.setRotationAxis(Rotate.X_AXIS);
 //      root.setRotate(30);
 //      root.setRotationAxis(Rotate.Y_AXIS);
 //      root.setRotate(30);
-
+        
 		Scene scene = new Scene(group, WINDOW_WIDTH, WINDOW_HEIGHT);
 //        scene.setFill(Color.SILVER);
 		
@@ -52,6 +83,7 @@ public class Showroom extends Application{
 //      camera.setTranslateZ(-400);
         scene.setCamera(camera);
 
+	    /*
         //Add mouse control
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override public void handle(MouseEvent event) {
@@ -64,32 +96,40 @@ public class Showroom extends Application{
                 group.onMouseDragged(event);
             }
         });
-
-        
-        //Add keyboard control.
+        */
+		
         stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-          switch (event.getCode()) {
-            case NUMPAD9:
-            	group.zoom(100);
-              break;
-            case NUMPAD7:
-            	group.zoom(-100);
-              break;
-            case NUMPAD8:
-            	group.rotateByX(10);
-              break;
-            case NUMPAD2:
-            	group.rotateByX(-10);
-              break;
-            case NUMPAD6:
-            	group.rotateByY(10);
-              break;
-            case NUMPAD4:
-            	group.rotateByY(-10);
-              break;
-          }
-        });        
-        
+            switch (event.getCode()) {
+              case PLUS:
+              	group.zoom(100);
+                break;
+              case MINUS:
+              	group.zoom(-100);
+                break;
+              case RIGHT:
+              	group.rotateByY(10);
+                break;
+              case LEFT:
+              	group.rotateByY(-10);
+                break;
+              case UP:
+              	group.rotateByX(10);
+                break;
+              case DOWN:
+              	group.rotateByX(-10);
+                break;
+              case PAGE_UP:
+              	group.rotateByZ(10);
+                break;
+              case PAGE_DOWN:
+              	group.rotateByZ(-10);
+                break;
+            }
+          });        
+
+
+	    //addMouseActions(group);
+	    //addKeyboardActions(stage, group);
         stage.setTitle("Welcome to the Showroom");
         stage.setScene(scene);
         stage.show();
@@ -102,4 +142,84 @@ public class Showroom extends Application{
         return perspectiveCamera;
     }
 
+    
+    private void addMouseActions(Pane group) {
+    	 Rotate xRotate = new Rotate(0, Rotate.X_AXIS);
+         Rotate yRotate = new Rotate(0, Rotate.Y_AXIS);
+         Rotate zRotate = new Rotate(0, Rotate.Z_AXIS);
+         group.getTransforms().addAll(xRotate, yRotate, zRotate);
+         xRotate.angleProperty().bind(angleX);
+         yRotate.angleProperty().bind(angleY);
+         zRotate.angleProperty().bind(angleZ);
+         
+         group.setOnMousePressed(event -> {
+             scenex = event.getSceneX();
+             sceney = event.getSceneY();
+             fixedXAngle = angleX.get();
+             fixedYAngle = angleY.get();
+             if(event.isMiddleButtonDown()) {
+                 scenez = event.getSceneX();
+                 fixedZAngle = angleZ.get();
+             }
+             
+         });
+         
+         group.setOnMouseDragged(event -> {
+             if(event.isMiddleButtonDown()) 
+                 angleZ.set(fixedZAngle - (scenez - event.getSceneY()));
+             else
+                 angleX.set(fixedXAngle - (scenex - event.getSceneY()));
+             angleY.set(fixedYAngle + sceney - event.getSceneX());
+         });     
+    }
+    
+    private void addKeyboardActions(Stage stage, Pane pane) {
+        //Add keyboard control.
+    	
+    	stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            switch (event.getCode()) {
+            case PLUS:
+              	pane.translateZProperty().set(pane.getTranslateZ() + 100);
+              break;
+            case MINUS:
+              	pane.translateZProperty().set(pane.getTranslateZ() - 100);
+              break;
+            case RIGHT:
+                angleY.set(fixedYAngle+=10);
+              break;
+            case LEFT:
+                angleY.set(fixedYAngle-=10);
+              break;
+            case UP:
+                angleX.set(fixedYAngle+=10);
+              break;
+            case DOWN:
+                angleX.set(fixedYAngle-=10);
+              break;
+            case PAGE_UP:
+                angleZ.set(fixedZAngle+=10);
+              break;
+            case PAGE_DOWN:
+                angleZ.set(fixedZAngle+=10);
+              break;
+          }
+            /*
+          double change = 10.0;
+            //Add shift modifier to simulate "Running Speed"
+            if(event.isShiftDown()) { change = 50.0; }
+            //What key did the user press?
+            KeyCode keycode = event.getCode();
+            //Step 2c: Add Zoom controls
+            if(keycode == KeyCode.W) { camera.setTranslateZ(camera.getTranslateZ() + change); }
+            if(keycode == KeyCode.S) { camera.setTranslateZ(camera.getTranslateZ() - change); }
+            //Step 2d:  Add Strafe controls
+            if(keycode == KeyCode.A) { camera.setTranslateX(camera.getTranslateX() - change); }
+            if(keycode == KeyCode.D) { camera.setTranslateX(camera.getTranslateX() + change); }
+        */     
+
+        });   
+    	
+    }
+    
+    
 }
