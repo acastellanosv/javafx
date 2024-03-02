@@ -77,11 +77,11 @@ public class Showroom extends Application{
 //        scene.setFill(Color.SILVER);
 		
 		
-        PerspectiveCamera camera = new PerspectiveCamera();
+//        PerspectiveCamera camera = new PerspectiveCamera();
 //      camera.setTranslateX(-(box.getWidth()) / 2);
 //      camera.setTranslateY(-(box.getHeight()) / 2);
 //      camera.setTranslateZ(-400);
-        scene.setCamera(camera);
+//        scene.setCamera(camera);
 
 	    /*
         //Add mouse control
@@ -107,22 +107,22 @@ public class Showroom extends Application{
               	group.zoom(-100);
                 break;
               case RIGHT:
-              	group.rotateByY(10);
-                break;
-              case LEFT:
               	group.rotateByY(-10);
                 break;
-              case UP:
-              	group.rotateByX(10);
+              case LEFT:
+              	group.rotateByY(10);
                 break;
-              case DOWN:
+              case UP:
               	group.rotateByX(-10);
                 break;
+              case DOWN:
+              	group.rotateByX(10);
+                break;
               case PAGE_UP:
-              	group.rotateByZ(10);
+              	group.rotateByZ(-10);
                 break;
               case PAGE_DOWN:
-              	group.rotateByZ(-10);
+              	group.rotateByZ(10);
                 break;
             }
           });        

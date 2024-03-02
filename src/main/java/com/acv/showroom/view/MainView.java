@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import com.acv.showroom.texture.ImageNet;
+
 import javafx.geometry.Point3D;
 import javafx.scene.DepthTest;
 import javafx.scene.input.MouseEvent;
@@ -29,7 +31,7 @@ public class MainView extends Pane{
 		this.height = height;
 //    	Shape3DRectangle shape3D = new Shape3DRectangle(200, 200, 200);
 //		rect = new MeshView(shape3D);
-		setDepthTest(DepthTest.ENABLE);
+//		setDepthTest(DepthTest.ENABLE);
 //		TriangleMesh volume = new GeneratedVolume(0, 200, 10, x->Math.sin(x.doubleValue()), x->Math.cos(x.doubleValue()));
 //		TriangleMesh volume = new GeneratedVolume(0, 100, 10, f1 , f2);
 
@@ -45,7 +47,8 @@ public class MainView extends Pane{
 		pivotX = shapeWidth/2;
 		pivotY = shapeHeight/2;
 		pivotZ = shapeDepth/2;
-		
+		meshView.setCullFace(CullFace.BACK);
+
 	}
 
     private TriangleMesh getTwoFacesMesh(float width, float height, float depth) {
@@ -93,14 +96,15 @@ public class MainView extends Pane{
     
     public void render(Color color) {
 		PhongMaterial material = new PhongMaterial(color);
-		material.setDiffuseColor(color);
-        material.setSpecularColor(color);
+//		material.setDiffuseColor(color);
+//		material.setSpecularColor(color);
+		ImageNet imageNet = new ImageNet("1","2","3","4","5","6"); 
+		material.setDiffuseMap(imageNet.getImage());
 		meshView.setMaterial(material);
 //		rect.setRotationAxis(Rotate.Y_AXIS);
 		meshView.setTranslateX((width/2)-pivotX);
 		meshView.setTranslateY((height/2)-pivotY);
 		// try commenting this line out to see what it's effect is . . .
-		meshView.setCullFace(CullFace.BACK);
 		meshView.setDrawMode(DrawMode.FILL);
 		this.getChildren().add(meshView);
 
