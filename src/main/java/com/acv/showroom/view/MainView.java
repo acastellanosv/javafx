@@ -1,13 +1,10 @@
 package com.acv.showroom.view;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiFunction;
 
-import com.acv.showroom.texture.ImageNet;
+import com.acv.showroom.texture.DynamicTextureNet;
 
-import javafx.geometry.Point3D;
-import javafx.scene.DepthTest;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -20,9 +17,9 @@ import javafx.scene.transform.Rotate;
 
 public class MainView extends Pane{
 
-    double anchorX, anchorY, anchorAngleX, anchorAngleY;
-	final MeshView meshView;
-	double pivotX, pivotY, pivotZ;
+    private double anchorX, anchorY, anchorAngleX, anchorAngleY;
+	private MeshView meshView;
+	private double pivotX, pivotY, pivotZ;
 	private int width;
 	private int height;
     
@@ -34,20 +31,6 @@ public class MainView extends Pane{
 //		setDepthTest(DepthTest.ENABLE);
 //		TriangleMesh volume = new GeneratedVolume(0, 200, 10, x->Math.sin(x.doubleValue()), x->Math.cos(x.doubleValue()));
 //		TriangleMesh volume = new GeneratedVolume(0, 100, 10, f1 , f2);
-
-		double shapeWidth = 200.0;
-		double shapeHeight = 200.0;
-		double shapeDepth = 200.0;
-
-		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth);
-		
-//		TriangleMesh volume = getTwoFacesMesh((float)shapeWidth, (float)shapeHeight, (float)shapeDepth);
-    
-		meshView = new MeshView(volume);
-		pivotX = shapeWidth/2;
-		pivotY = shapeHeight/2;
-		pivotZ = shapeDepth/2;
-		meshView.setCullFace(CullFace.BACK);
 
 	}
 
@@ -98,8 +81,25 @@ public class MainView extends Pane{
 		PhongMaterial material = new PhongMaterial(color);
 //		material.setDiffuseColor(color);
 //		material.setSpecularColor(color);
-		ImageNet imageNet = new ImageNet("1","2","3","4","5","6"); 
+		DynamicTextureNet imageNet = new DynamicTextureNet("FRONT","BACK","TOP","BOTTOM","LEFT","RIGTH");
+		imageNet.getTexturePoints(4,3);
+		ImageView imageView = new ImageView(imageNet.getImage());
+		this.getChildren().add(imageView);
 		material.setDiffuseMap(imageNet.getImage());
+		double shapeWidth = 200.0;
+		double shapeHeight = 200.0;
+		double shapeDepth = 200.0;
+
+		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth);
+		
+//		TriangleMesh volume = getTwoFacesMesh((float)shapeWidth, (float)shapeHeight, (float)shapeDepth);
+    
+		meshView = new MeshView(volume);
+		pivotX = shapeWidth/2;
+		pivotY = shapeHeight/2;
+		pivotZ = shapeDepth/2;
+		meshView.setCullFace(CullFace.BACK);
+
 		meshView.setMaterial(material);
 //		rect.setRotationAxis(Rotate.Y_AXIS);
 		meshView.setTranslateX((width/2)-pivotX);

@@ -1,5 +1,8 @@
 package com.acv.showroom.view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiFunction;
 
 import javafx.scene.shape.TriangleMesh;
@@ -36,8 +39,8 @@ public class GeneratedShape extends TriangleMesh{
 	private TriangleMesh createVolumeSection(float width, float height, float w2, float h2, float depth, float step){
 		float offset = (step);
 		TriangleMesh m = new TriangleMesh();
-		System.out.println(String.format("(w,h,d):(%s,%s,%s)",width,height,depth));
-		System.out.println(String.format("(w2,h2,d,o):(%s,%s,%s,%s)",w2,h2,depth,offset));
+//		System.out.println(String.format("(w,h,d):(%s,%s,%s)",width,height,depth));
+//		System.out.println(String.format("(w2,h2,d,o):(%s,%s,%s,%s)",w2,h2,depth,offset));
 		//create Points
 		//+y->down  +z->front
 		//       y /
@@ -79,28 +82,30 @@ public class GeneratedShape extends TriangleMesh{
          *  -------  0,1    1,1    -------
          * 0      2				  2       3
          *
-         *         ---------
+         *         ---------      ---     --0.0
          *         |       |
          *         |  Top  |
          *         |       |
-         * ---------------------------------
+         * ---------------------------------0.33
          * |       |       |       |       |
          * |  Left | Front | Right | Back  |
          * |       |       |       |       |
-         * ---------------------------------
+         * ---------------------------------0.66
          *         |       |
-         *         |Bottom |
-         *         |       |
-         *         ---------
-         *
+         *         |Bottom |       |       |
+         *         |       |       |       |
+         *         ---------              --1.0
+         *       0.25     0.5    0.75     1.0
          */				
-        float[] texCoords = {
-                0, 0, // idx t0
-                1, 0, // idx t1
-                0, 1, // idx t2
-                1, 1  // idx t3
-        };
-		m.getTexCoords().addAll(texCoords);
+		
+		float w = 1.0f;
+		float h = 1.0f;
+		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,1,0));//Top
+		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,1,1));//Front
+//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,1,2));//Bottom
+//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,0,1));//Left
+//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,2,1));//Right
+//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,3,1));//Back
 		//create Points
 		//+y->down  +z->front
 		//       y /
@@ -121,23 +126,23 @@ public class GeneratedShape extends TriangleMesh{
         int[] faces = {
           	  //p1, p2, p3
           	  //front
-        		points+1, 2, points+0, 0, points+2, 3,
-        		points+2, 3, points+3, 0, points+1, 1
+        		points+1, 0, points+0, 2, points+2, 3,
+        		points+2, 3, points+3, 1, points+1, 0
                 ,//right
-                points+3, 2, points+2, 0, points+4, 3,
-                points+4, 3, points+5, 0, points+3, 1
+                points+3, 0+8, points+2, 2+8, points+4, 3+8,
+                points+4, 3+8, points+5, 1+8, points+3, 0+8
                 ,//back
-                points+5, 2, points+4, 0, points+6, 3,
-                points+6, 0, points+7, 3, points+5, 1
+                points+5, 0, points+4, 2, points+6, 3,
+                points+6, 3, points+7, 1, points+5, 0
                 ,//left
-                points+1, 2, points+7, 0, points+6, 3,
-                points+6, 0, points+0, 3, points+1, 1
+                points+1, 0, points+7, 2, points+6, 3,
+                points+6, 3, points+0, 1, points+1, 0
                 ,//bottom
-                points+0, 2, points+6, 0, points+4, 3,
-                points+4, 0, points+2, 3, points+0, 1
+                points+0, 0, points+6, 2, points+4, 3,
+                points+4, 3, points+2, 1, points+0, 0
                 ,//top  
-                points+1, 2, points+3, 0, points+5, 3,
-                points+5, 0, points+7, 3, points+1, 1
+                points+1, 0, points+3, 2, points+5, 3,
+                points+5, 3, points+7, 1, points+1, 0
           };
 
         
@@ -159,4 +164,69 @@ public class GeneratedShape extends TriangleMesh{
         
 		return m ;
 	}
+
+	/*
+     *  texture coord:
+     *  0     1
+     *  --------
+     *  |\     |
+     *  |  \   |
+     *  |    \ |
+     *  -------- 
+     *  2     3
+	 * 
+     * -----------------------------------0.0
+     * |0      |1      |2      |3      |4
+     * |   1   |   2   |   3   |   4   |
+     * |       |       |       |       |
+     * -----------------------------------0.33
+     * |5      |6      |7      |8      |9
+     * |   5   |   6   |   7   |   8   |
+     * |       |       |       |       |
+     * -----------------------------------0.66
+     * |10     |11     |12     |13     |14
+     * |   9   |  10   |   11  |   12  |
+     * |       |       |       |       |
+     * -----------------------------------1.0
+     * |15     |16     |17     |18     |19
+     *       0.25     0.5    0.75     1.0
+
+	 */
+	public float[] getTraslatedCubeCords(float w, float h, float x, float y) {
+		float[] coords = {
+		        0.00f, 0.00f,
+		        0.25f, 0.00f,
+		        0.50f, 0.00f,
+		        0.75f, 0.00f,
+		        1.00f, 0.00f,
+        
+		        0.00f, 0.25f,
+		        0.25f, 0.25f,
+		        0.50f, 0.25f,
+		        0.75f, 0.25f,
+		        1.00f, 0.25f,
+
+		        0.00f, 0.50f,
+		        0.25f, 0.50f,
+		        0.50f, 0.50f,
+		        0.75f, 0.50f,
+		        1.00f, 0.50f,
+		        
+		        0.00f, 0.75f,
+		        0.25f, 0.75f,
+		        0.50f, 0.75f,
+		        0.75f, 0.75f,
+		        1.00f, 0.75f,
+
+		        0.00f, 1.00f,
+		        0.25f, 1.00f,
+		        0.50f, 1.00f,
+		        0.75f, 1.00f,
+		        1.00f, 1.00f,
+		        
+		};
+		return coords;
+	}
+	
+	
 }

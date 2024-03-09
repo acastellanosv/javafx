@@ -9,17 +9,17 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-public class ImageNet {
+public class CubitTextureNet {
 
 	private Image image; 
 	
-	public ImageNet(String face1, String face2, String face3, String face4, String face5, String face6) {
+	public CubitTextureNet(String face1, String face2, String face3, String face4, String face5, String face6) {
 
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 
 		Label label1 = new Label(face1);
-		label1.setRotate(90);
+//		label1.setRotate(90);
 		GridPane.setHalignment(label1, HPos.CENTER);
 
 		Label label2 = new Label(face2);
@@ -35,15 +35,22 @@ public class ImageNet {
 		GridPane.setHalignment(label5, HPos.CENTER);
 
 		Label label6 = new Label(face6);
-		label6.setRotate(90);
+//		label6.setRotate(90);
 		GridPane.setHalignment(label6, HPos.CENTER);
 
+		String mark = "-----------|-------------";
+		grid.add(new Label(mark), 0, 0);
 		grid.add(label1, 1, 0);
+		grid.add(new Label(mark), 2, 0);
+		grid.add(new Label(mark), 3, 0);
 		grid.add(label2, 0, 1);
 		grid.add(label3, 1, 1);
 		grid.add(label4, 2, 1);
 		grid.add(label5, 3, 1);
+		grid.add(new Label(mark), 0, 2);
 		grid.add(label6, 1, 2);
+		grid.add(new Label(mark), 2, 2);
+		grid.add(new Label(mark), 3, 2);
 
 		grid.setGridLinesVisible(true);
 
