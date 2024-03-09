@@ -107,22 +107,22 @@ public class Showroom extends Application{
               	group.zoom(-100);
                 break;
               case RIGHT:
-              	group.rotateByY(-10);
-                break;
-              case LEFT:
               	group.rotateByY(10);
                 break;
-              case UP:
-              	group.rotateByX(-10);
+              case LEFT:
+              	group.rotateByY(-10);
                 break;
-              case DOWN:
+              case UP:
               	group.rotateByX(10);
                 break;
+              case DOWN:
+              	group.rotateByX(-10);
+                break;
               case PAGE_UP:
-              	group.rotateByZ(-10);
+              	group.rotateByZ(10);
                 break;
               case PAGE_DOWN:
-              	group.rotateByZ(10);
+              	group.rotateByZ(-10);
                 break;
             }
           });        

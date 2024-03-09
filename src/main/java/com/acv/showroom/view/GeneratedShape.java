@@ -1,18 +1,20 @@
 package com.acv.showroom.view;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import com.acv.showroom.texture.DynamicTextureNet;
+
+import javafx.scene.layout.Region;
 import javafx.scene.shape.TriangleMesh;
 
 public class GeneratedShape extends TriangleMesh{
 
 	private int points = 0;
+	private DynamicTextureNet texture;
 	
-	public GeneratedShape(double width, double height, double depth, double step, BiFunction<Double,Double,Double> wFx, BiFunction<Double,Double,Double> hFx) {
-
+	public GeneratedShape(double width, double height, double depth, double step, BiFunction<Double,Double,Double> wFx, BiFunction<Double,Double,Double> hFx, DynamicTextureNet imageNet) {
+		this.texture = imageNet;
 		double w1 = width;
 		double h1 = height;
 		double stepSize = depth/step;
@@ -34,6 +36,10 @@ public class GeneratedShape extends TriangleMesh{
 			h1 = h2;
 		}
 
+	}
+	
+	public void setTexture(List<Region> textures) {
+		this.texture = new DynamicTextureNet(textures);
 	}
 
 	private TriangleMesh createVolumeSection(float width, float height, float w2, float h2, float depth, float step){
@@ -98,14 +104,7 @@ public class GeneratedShape extends TriangleMesh{
          *       0.25     0.5    0.75     1.0
          */				
 		
-		float w = 1.0f;
-		float h = 1.0f;
-		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,1,0));//Top
-		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,1,1));//Front
-//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,1,2));//Bottom
-//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,0,1));//Left
-//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,2,1));//Right
-//		m.getTexCoords().addAll(getTraslatedCubeCords(w,h,3,1));//Back
+		m.getTexCoords().addAll(texture.getTexturePoints());
 		//create Points
 		//+y->down  +z->front
 		//       y /
@@ -123,26 +122,29 @@ public class GeneratedShape extends TriangleMesh{
 		//      (0,h,d)         (w,h,d)
 		//
 		//
+		
+		int[] texCoords = texture.getTextCoords();
+		int texIdx = 0;
         int[] faces = {
           	  //p1, p2, p3
           	  //front
-        		points+1, 0, points+0, 2, points+2, 3,
-        		points+2, 3, points+3, 1, points+1, 0
+        		points+1, texCoords[texIdx++], points+0, texCoords[texIdx++], points+2, texCoords[texIdx++],
+        		points+2, texCoords[texIdx++], points+3, texCoords[texIdx++], points+1, texCoords[texIdx++]
                 ,//right
-                points+3, 0+8, points+2, 2+8, points+4, 3+8,
-                points+4, 3+8, points+5, 1+8, points+3, 0+8
+                points+3, texCoords[texIdx++], points+2, texCoords[texIdx++], points+4, texCoords[texIdx++],
+                points+4, texCoords[texIdx++], points+5, texCoords[texIdx++], points+3, texCoords[texIdx++]
                 ,//back
-                points+5, 0, points+4, 2, points+6, 3,
-                points+6, 3, points+7, 1, points+5, 0
+                points+5, texCoords[texIdx++], points+4, texCoords[texIdx++], points+6, texCoords[texIdx++],
+                points+6, texCoords[texIdx++], points+7, texCoords[texIdx++], points+5, texCoords[texIdx++]
                 ,//left
-                points+1, 0, points+7, 2, points+6, 3,
-                points+6, 3, points+0, 1, points+1, 0
+                points+7, texCoords[texIdx++], points+6, texCoords[texIdx++], points+0, texCoords[texIdx++],
+                points+0, texCoords[texIdx++], points+1, texCoords[texIdx++], points+7, texCoords[texIdx++]
                 ,//bottom
-                points+0, 0, points+6, 2, points+4, 3,
-                points+4, 3, points+2, 1, points+0, 0
+                points+0, texCoords[texIdx++], points+6, texCoords[texIdx++], points+4, texCoords[texIdx++],
+                points+4, texCoords[texIdx++], points+2, texCoords[texIdx++], points+0, texCoords[texIdx++]
                 ,//top  
-                points+1, 0, points+3, 2, points+5, 3,
-                points+5, 3, points+7, 1, points+1, 0
+                points+7, texCoords[texIdx++], points+1, texCoords[texIdx++], points+3, texCoords[texIdx++],
+                points+3, texCoords[texIdx++], points+5, texCoords[texIdx++], points+7, texCoords[texIdx++]
           };
 
         
@@ -165,68 +167,6 @@ public class GeneratedShape extends TriangleMesh{
 		return m ;
 	}
 
-	/*
-     *  texture coord:
-     *  0     1
-     *  --------
-     *  |\     |
-     *  |  \   |
-     *  |    \ |
-     *  -------- 
-     *  2     3
-	 * 
-     * -----------------------------------0.0
-     * |0      |1      |2      |3      |4
-     * |   1   |   2   |   3   |   4   |
-     * |       |       |       |       |
-     * -----------------------------------0.33
-     * |5      |6      |7      |8      |9
-     * |   5   |   6   |   7   |   8   |
-     * |       |       |       |       |
-     * -----------------------------------0.66
-     * |10     |11     |12     |13     |14
-     * |   9   |  10   |   11  |   12  |
-     * |       |       |       |       |
-     * -----------------------------------1.0
-     * |15     |16     |17     |18     |19
-     *       0.25     0.5    0.75     1.0
-
-	 */
-	public float[] getTraslatedCubeCords(float w, float h, float x, float y) {
-		float[] coords = {
-		        0.00f, 0.00f,
-		        0.25f, 0.00f,
-		        0.50f, 0.00f,
-		        0.75f, 0.00f,
-		        1.00f, 0.00f,
-        
-		        0.00f, 0.25f,
-		        0.25f, 0.25f,
-		        0.50f, 0.25f,
-		        0.75f, 0.25f,
-		        1.00f, 0.25f,
-
-		        0.00f, 0.50f,
-		        0.25f, 0.50f,
-		        0.50f, 0.50f,
-		        0.75f, 0.50f,
-		        1.00f, 0.50f,
-		        
-		        0.00f, 0.75f,
-		        0.25f, 0.75f,
-		        0.50f, 0.75f,
-		        0.75f, 0.75f,
-		        1.00f, 0.75f,
-
-		        0.00f, 1.00f,
-		        0.25f, 1.00f,
-		        0.50f, 1.00f,
-		        0.75f, 1.00f,
-		        1.00f, 1.00f,
-		        
-		};
-		return coords;
-	}
 	
 	
 }

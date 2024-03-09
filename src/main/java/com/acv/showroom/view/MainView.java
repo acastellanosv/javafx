@@ -1,12 +1,20 @@
 package com.acv.showroom.view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import com.acv.showroom.texture.DynamicTextureNet;
 
+import javafx.geometry.HPos;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -69,20 +77,31 @@ public class MainView extends Pane{
     		return m ;
     }
 
-    private TriangleMesh generateShape(double shapeWidth, double shapeHeight, double shapeDepth) {
+    private TriangleMesh generateShape(double shapeWidth, double shapeHeight, double shapeDepth, DynamicTextureNet imageNet) {
 		double step = 1.0;
 		BiFunction<Double, Double, Double> f1 = (w,x)->(w.doubleValue());
 		BiFunction<Double, Double, Double> f2 = (w,x)->(w.doubleValue());
-		TriangleMesh volume = new GeneratedShape(shapeWidth, shapeHeight, shapeDepth, step, f1, f2);
+		TriangleMesh volume = new GeneratedShape(shapeWidth, shapeHeight, shapeDepth, step, f1, f2, imageNet);
 		return volume;
     }
     
-    public void render(Color color) {
+	public List<Region> generateTextures() {
+		String labels[] = {"FRONT","RIGTH","BACK","LEFT","BOTOM","TOP"};
+		List<Region> textures = Arrays.stream(labels)
+				.map(text->new Label(text))
+				.peek(label->GridPane.setHalignment(label, HPos.CENTER))
+				.collect(Collectors.toList());
+//		label1.setRotate(90);
+		return textures;
+	}
+
+	
+	public void render(Color color) {
 		PhongMaterial material = new PhongMaterial(color);
 //		material.setDiffuseColor(color);
 //		material.setSpecularColor(color);
-		DynamicTextureNet imageNet = new DynamicTextureNet("FRONT","BACK","TOP","BOTTOM","LEFT","RIGTH");
-		imageNet.getTexturePoints(4,3);
+		List<Region> textures = generateTextures();
+		DynamicTextureNet imageNet = new DynamicTextureNet(textures);
 		ImageView imageView = new ImageView(imageNet.getImage());
 		this.getChildren().add(imageView);
 		material.setDiffuseMap(imageNet.getImage());
@@ -90,7 +109,7 @@ public class MainView extends Pane{
 		double shapeHeight = 200.0;
 		double shapeDepth = 200.0;
 
-		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth);
+		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth, imageNet);
 		
 //		TriangleMesh volume = getTwoFacesMesh((float)shapeWidth, (float)shapeHeight, (float)shapeDepth);
     
