@@ -40,11 +40,10 @@ public class MainView extends Pane{
 
 	}
 
-    private TriangleMesh generateShape(double shapeWidth, double shapeHeight, double shapeDepth, DynamicTextureNet imageNet) {
-		double step = 2.0;
+    private TriangleMesh generateShape(double shapeWidth, double shapeHeight, double shapeDepth, double depthStep, DynamicTextureNet imageNet) {
 		BiFunction<Double, Double, Double> f1 = (w,x)->(w.doubleValue());
 		BiFunction<Double, Double, Double> f2 = (w,x)->(w.doubleValue());
-		TriangleMesh volume = new GeneratedShape(shapeWidth, shapeHeight, shapeDepth, step, f1, f2, imageNet);
+		TriangleMesh volume = new GeneratedShape(shapeWidth, shapeHeight, shapeDepth, depthStep, f1, f2, imageNet);
 		return volume;
     }
     
@@ -70,16 +69,17 @@ public class MainView extends Pane{
 		material.setDiffuseMap(imageNet.getImage());
 		double shapeWidth = 200.0;
 		double shapeHeight = 200.0;
-		double shapeDepth = 200.0;
+		double shapeDepth = 600.0;
+		double step = 3.0;
 
-		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth, imageNet);
+		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth, step, imageNet);
 		
 //		TriangleMesh volume = getTwoFacesMesh((float)shapeWidth, (float)shapeHeight, (float)shapeDepth);
     
 		meshView = new MeshView(volume);
 		pivotX = shapeWidth/2;
 		pivotY = shapeHeight/2;
-		pivotZ = shapeDepth/2;
+		pivotZ = -shapeDepth/2;
 		meshView.setCullFace(CullFace.BACK);
 
 		meshView.setMaterial(material);

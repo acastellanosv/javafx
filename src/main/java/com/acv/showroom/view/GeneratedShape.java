@@ -23,9 +23,9 @@ public class GeneratedShape extends TriangleMesh{
 		double h1 = height;
 		double stepSize = depth/step;
 		int totalSteps = (int)Math.round(depth/stepSize);
-		System.out.println("totalSteps="+totalSteps);
+//		System.out.println("totalSteps="+totalSteps);
 		for(int i = 0; i < totalSteps; i ++) {
-//			if(i==0)continue;
+//			if(i!=0)continue;
 			double stepDepth = stepSize;
 			if(stepSize*i>depth) {
 				stepDepth=depth-(stepSize*(i-1));
@@ -55,7 +55,7 @@ public class GeneratedShape extends TriangleMesh{
 
 	private TriangleMesh createVolumeSection(float width, float height, float w2, float h2
 			, float depth, float offset, float x, int total){
-		System.out.println("x="+x);
+//		System.out.println("x="+x);
 		TriangleMesh m = new TriangleMesh();
 //		System.out.println(String.format("(w,h,d):(%s,%s,%s)",width,height,depth));
 //		System.out.println(String.format("(w2,h2,d,o):(%s,%s,%s,%s)",w2,h2,depth,offset));
@@ -76,17 +76,19 @@ public class GeneratedShape extends TriangleMesh{
 		//      (0,h,d)         (w,h,d)
 		//
 		//
-		System.out.println("offset="+offset);
+//		System.out.println("depth="+(depth));
+//		System.out.println("offset="+(offset));
+//		System.out.println("length="+(0-offset)+" to "+(-depth-offset));
 		float[] thesePoints = {
-                0, height, depth+offset, // idx p0
-                0, 0, depth+offset, // idx p1
-                width,  height, depth+offset, // idx p2
-                width, 0, depth+offset  // idx p3
+                0, height, 0-offset, // idx p0
+                0, 0, 0-offset, // idx p1
+                width,  height, 0-offset, // idx p2
+                width, 0, 0-offset  // idx p3
                 ,
-                width,  height, 0+offset, // idx p4
-                width, 0, 0+offset,  // idx p5
-                0,  height, 0+offset, // idx p6
-                0, 0, 0+offset // idx p7
+                width,  height, -depth-offset, // idx p4
+                width, 0, -depth-offset,  // idx p5
+                0,  height, -depth-offset, // idx p6
+                0, 0, -depth-offset // idx p7
         };
 		m.getPoints().addAll(thesePoints);
         /**
@@ -141,10 +143,10 @@ public class GeneratedShape extends TriangleMesh{
         List<Integer> faces = new ArrayList<>();
         //p1, p2, p3
         //front
-    	System.out.println("x="+x);
-        if(x>=total) 
+//    	System.out.println("x="+x);
+        if(x==0) 
         {
-        	System.out.println("front");
+//        	System.out.println("front");
         faces.add(points+1); faces.add(texCoords[0]); faces.add(points+0); faces.add(texCoords[1]); faces.add(points+2); faces.add(texCoords[2]);
         faces.add(points+2); faces.add(texCoords[3]); faces.add(points+3); faces.add(texCoords[4]); faces.add(points+1); faces.add(texCoords[5]);
         }
@@ -152,7 +154,7 @@ public class GeneratedShape extends TriangleMesh{
         faces.add(points+3); faces.add(texCoords[6]); faces.add(points+2); faces.add(texCoords[7]); faces.add(points+4); faces.add(texCoords[8]);
         faces.add(points+4); faces.add(texCoords[9]); faces.add(points+5); faces.add(texCoords[10]); faces.add(points+3); faces.add(texCoords[11]);
         //back
-        if(x==0) 
+        if(x>=total) 
         {
         faces.add(points+5); faces.add(texCoords[12]); faces.add(points+4); faces.add(texCoords[13]); faces.add(points+6); faces.add(texCoords[14]);
         faces.add(points+6); faces.add(texCoords[15]); faces.add(points+7); faces.add(texCoords[16]); faces.add(points+5); faces.add(texCoords[17]);

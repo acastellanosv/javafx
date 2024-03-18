@@ -112,7 +112,7 @@ public class DynamicTextureNet {
 			}
 		}
 		float[] points = new float[((((int)cols+1)*((int)rows+1)))*2];
-		System.out.println(textures+" textures = points("+cols+"*"+rows+")="+points.length);
+//		System.out.println(textures+" textures = points("+cols+"*"+rows+")="+points.length);
 		int i = 0;
 		for(int y=0; y<=rows; y++) {
 			for(int x=0; x<=cols; x++) {
@@ -185,7 +185,7 @@ public class DynamicTextureNet {
 		int cols = (int)dimension.getX();
 		int rows = (int)dimension.getY();
 		int[] coords = new int[6*cols*rows];
-		System.out.println("textures="+cols+"x"+rows+" = "+coords.length);
+//		System.out.println("textures="+cols+"x"+rows+" = "+coords.length);
 		int i = 0;
 		for(int y=0; y<rows; y++) {
 			for(int x=0; x<cols; x++) {
