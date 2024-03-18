@@ -1,14 +1,10 @@
 package com.acv.showroom.texture;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -36,7 +32,7 @@ public class DynamicTextureNet {
 			}
 		}
 
-		grid.setGridLinesVisible(true);
+		grid.setGridLinesVisible(false);
 
 		ColumnConstraints col1 = new ColumnConstraints();
 		col1.setPercentWidth(33.33);

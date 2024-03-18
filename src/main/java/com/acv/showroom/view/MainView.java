@@ -1,6 +1,5 @@
 package com.acv.showroom.view;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -9,6 +8,7 @@ import java.util.stream.Collectors;
 import com.acv.showroom.texture.DynamicTextureNet;
 
 import javafx.geometry.HPos;
+import javafx.scene.DepthTest;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -34,51 +34,14 @@ public class MainView extends Pane{
     public MainView(int width, int height) {
 		this.width = width;
 		this.height = height;
-//    	Shape3DRectangle shape3D = new Shape3DRectangle(200, 200, 200);
-//		rect = new MeshView(shape3D);
 //		setDepthTest(DepthTest.ENABLE);
 //		TriangleMesh volume = new GeneratedVolume(0, 200, 10, x->Math.sin(x.doubleValue()), x->Math.cos(x.doubleValue()));
 //		TriangleMesh volume = new GeneratedVolume(0, 100, 10, f1 , f2);
 
 	}
 
-    private TriangleMesh getTwoFacesMesh(float width, float height, float depth) {
-    
-    		TriangleMesh m = new TriangleMesh();
-    		float[] thesePoints = {
-                    0,  height, 0,
-                    0, 0, 0,
-                    width/2,  height, 0,
-                    width/2, 0, 0,
-                    width,  height, 0,
-                    width, 0, 0
-    			};
-    		m.getPoints().addAll(thesePoints);
-    				
-            float[] texCoords = {
-                    1, 1, // idx t0
-                    1, 0, // idx t1
-                    0, 1, // idx t2
-                    0, 0  // idx t3
-            };
-    		m.getTexCoords().addAll(texCoords);
-            int[] faces = {
-            		
-              	  //p1, p2, p3
-              	  //front
-            		1, 2, 0, 0, 2, 3,
-            		2, 0, 3, 3, 1, 1
-            		,
-            		3, 2, 2, 0, 4, 3,
-            		4, 0, 5, 3, 3, 1
-              		
-              };
-            m.getFaces().addAll(faces);
-    		return m ;
-    }
-
     private TriangleMesh generateShape(double shapeWidth, double shapeHeight, double shapeDepth, DynamicTextureNet imageNet) {
-		double step = 1.0;
+		double step = 2.0;
 		BiFunction<Double, Double, Double> f1 = (w,x)->(w.doubleValue());
 		BiFunction<Double, Double, Double> f2 = (w,x)->(w.doubleValue());
 		TriangleMesh volume = new GeneratedShape(shapeWidth, shapeHeight, shapeDepth, step, f1, f2, imageNet);
@@ -86,7 +49,7 @@ public class MainView extends Pane{
     }
     
 	public List<Region> generateTextures() {
-		String labels[] = {"FRONT","RIGTH","BACK","LEFT","BOTOM","TOP"};
+		String labels[] = {"FN","RG","BK","LF","BM","TP"};
 		List<Region> textures = Arrays.stream(labels)
 				.map(text->new Label(text))
 				.peek(label->GridPane.setHalignment(label, HPos.CENTER))
@@ -102,8 +65,8 @@ public class MainView extends Pane{
 //		material.setSpecularColor(color);
 		List<Region> textures = generateTextures();
 		DynamicTextureNet imageNet = new DynamicTextureNet(textures);
-		ImageView imageView = new ImageView(imageNet.getImage());
-		this.getChildren().add(imageView);
+//		ImageView imageView = new ImageView(imageNet.getImage());
+//		this.getChildren().add(imageView);
 		material.setDiffuseMap(imageNet.getImage());
 		double shapeWidth = 200.0;
 		double shapeHeight = 200.0;
