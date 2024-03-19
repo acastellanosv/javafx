@@ -49,12 +49,14 @@ public class MainView extends Pane{
 //		ImageView imageView = new ImageView(imageNet.getImage());
 //		this.getChildren().add(imageView);
 		material.setDiffuseMap(imageNet.getImage());
-		double shapeWidth = 200.0;
-		double shapeHeight = 200.0;
+		double topWidth = 200.0;
+		double topHeight = 200.0;
+		double bottomWidth = 200.0;
+		double bottomHeight = 200.0;
 		double shapeDepth = 200.0;
 		double step = 2.0;
 
-		TriangleMesh volume = generateShape(shapeWidth, shapeHeight, shapeDepth, step, imageNet);
+		TriangleMesh volume = generateShape(topWidth, topHeight, bottomWidth, bottomHeight, shapeDepth, step, imageNet);
 		
 //		TriangleMesh volume = getTwoFacesMesh((float)shapeWidth, (float)shapeHeight, (float)shapeDepth);
     
@@ -74,10 +76,14 @@ public class MainView extends Pane{
 
 	}
 
-	private TriangleMesh generateShape(double shapeWidth, double shapeHeight, double shapeDepth, double depthStep, DynamicTextureNet imageNet) {
-		BiFunction<Double, Double, Double> wf = (w,x)->(w+(100*(x+1)));
-		BiFunction<Double, Double, Double> hf = (h,x)->(h+(100*(x+1)));
-		TriangleMesh volume = new GeneratedShape(shapeWidth, shapeHeight, shapeDepth, depthStep, wf, hf, imageNet);
+	private TriangleMesh generateShape(double topWidth, double topHeight, double bottomWidth, double bottomHeight 
+			, double shapeDepth, double depthStep, DynamicTextureNet imageNet) {
+		BiFunction<Double, Double, Double> wtf = (w,x)->(w+(100*(x+1)));
+		BiFunction<Double, Double, Double> htf = (h,x)->(h+(100*(x+1)));
+		BiFunction<Double, Double, Double> wbf = (w,x)->(w+(100*(x+1)));
+		BiFunction<Double, Double, Double> hbf = (h,x)->(h+(100*(x+1)));
+		TriangleMesh volume = new GeneratedShape(topWidth, topHeight, bottomWidth, bottomHeight
+				, shapeDepth, depthStep, wtf, htf, wbf, hbf, imageNet);
 		return volume;
     }
     

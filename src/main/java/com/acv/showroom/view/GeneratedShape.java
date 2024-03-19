@@ -15,12 +15,16 @@ public class GeneratedShape extends TriangleMesh{
 	private int points = 0;
 	private DynamicTextureNet texture;
 	
-	public GeneratedShape(double width, double height, double depth, double step
-			, BiFunction<Double,Double,Double> wFx, BiFunction<Double,Double,Double> hFx
+	public GeneratedShape(double widthTop, double heightTop, double widthBottom, double heightBottom
+			, double depth, double step
+			, BiFunction<Double,Double,Double> widthTopFx, BiFunction<Double,Double,Double> heightTopFx
+			, BiFunction<Double,Double,Double> widthBottomFx, BiFunction<Double,Double,Double> heightBottomFx
 			, DynamicTextureNet imageNet) {
 		this.texture = imageNet;
-		double w1 = width;
-		double h1 = height;
+		double widthTop1 = widthTop;
+		double heightTop1 = heightTop;
+		double widthBottom1 = widthBottom;
+		double heightBottom1 = heightBottom;
 		double stepSize = depth/step;
 		int totalSteps = (int)Math.round(depth/stepSize);
 //		System.out.println("totalSteps="+totalSteps);
@@ -32,20 +36,29 @@ public class GeneratedShape extends TriangleMesh{
 			}
 			double x = i;
 			double offset = (i*stepDepth);
-			double w2 = wFx.apply(w1,x);
-			double h2 = hFx.apply(h1, x);
+			double widthTop2 = widthTopFx.apply(widthTop1,x);
+			double heightTop2 = heightTopFx.apply(heightTop1, x);
+			double widthBottom2 = widthBottomFx.apply(widthBottom1,x);
+			double heightBottom2 = heightBottomFx.apply(heightBottom1, x);
 			double d = depth;
-			System.out.println("w="+w1+"->"+w2);
-			System.out.println("h="+h1+"->"+h2);
-			TriangleMesh t = createVolumeSection((float)w1, (float)h1, (float)w2, (float)h2
+			System.out.println("widthTop="+widthTop1+"->"+widthTop2);
+			System.out.println("heightTop="+heightTop1+"->"+heightTop2);
+			System.out.println("widthBottom="+widthBottom1+"->"+widthBottom2);
+			System.out.println("heightBottom="+heightBottom1+"->"+heightBottom2);
+			TriangleMesh t = createVolumeSection((float)widthTop1, (float)heightTop1
+					, (float)widthBottom1, (float)heightBottom1
+					, (float)widthTop2, (float)heightTop2
+					, (float)widthBottom2, (float)heightBottom2
 					, (float)stepDepth, (float)offset, (float)(x), totalSteps-1);
 			this.getPoints().addAll(t.getPoints());
 			points = this.getPoints().size()/3;
 			this.getTexCoords().addAll(t.getTexCoords());
 			this.getFaces().addAll(t.getFaces());
 
-			w1 = w2;
-			h1 = h2;
+			widthTop1 = widthTop2;
+			heightTop1 = heightTop2;
+			widthBottom1 = widthBottom2;
+			heightBottom1 = heightBottom2;
 		}
 
 	}
@@ -54,7 +67,10 @@ public class GeneratedShape extends TriangleMesh{
 		this.texture = new DynamicTextureNet(textures);
 	}
 
-	private TriangleMesh createVolumeSection(float width, float height, float w2, float h2
+	private TriangleMesh createVolumeSection(float widthTop1, float heightTop1
+			, float widthBottom1, float heightBottom1
+			, float widthTop2, float heightTop2
+			, float widthBottom2, float heightBottom2
 			, float depth, float offset, float x, int total){
 //		System.out.println("x="+x);
 		TriangleMesh m = new TriangleMesh();
@@ -64,7 +80,7 @@ public class GeneratedShape extends TriangleMesh{
 		//+y->down  +z->front
 		//       y /
 		//(0,0,0)|/ Front   (w,0,0)
-		// x-----1---------3---       
+		// x-----1---------3---                              
 		//      /|         |\       
 		//     / |         | \       
 		//    /  |(0,0,d)  |  \             Back
@@ -81,15 +97,15 @@ public class GeneratedShape extends TriangleMesh{
 //		System.out.println("offset="+(offset));
 //		System.out.println("length="+(0-offset)+" to "+(-depth-offset));
 		float[] thesePoints = {
-                -width/2, height/2, 0-offset, // idx p0
-                -width/2, -height/2, 0-offset, // idx p1
-                width/2,  height/2, 0-offset, // idx p2
-                width/2, -height/2, 0-offset  // idx p3
+                -widthBottom1/2, heightBottom1/2, 0-offset, // idx p0
+                -widthTop1/2, -heightTop1/2, 0-offset, // idx p1
+                widthBottom1/2,  heightBottom1/2, 0-offset, // idx p2
+                widthTop1/2, -heightTop1/2, 0-offset  // idx p3
                 ,
-                w2/2,  h2/2, -depth-offset, // idx p4
-                w2/2, -h2/2, -depth-offset,  // idx p5
-                -w2/2,  h2/2, -depth-offset, // idx p6
-                -w2/2, -h2/2, -depth-offset // idx p7
+                widthBottom2/2,  heightBottom2/2, -depth-offset, // idx p4
+                widthTop2/2, -heightTop2/2, -depth-offset,  // idx p5
+                -widthBottom2/2,  heightBottom2/2, -depth-offset, // idx p6
+                -widthTop2/2, -heightTop2/2, -depth-offset // idx p7
         };
 		m.getPoints().addAll(thesePoints);
         /**
