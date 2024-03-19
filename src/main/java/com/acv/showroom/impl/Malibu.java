@@ -31,43 +31,9 @@ public class Malibu extends Automobile{
 //		container.setMaterial(material);
 //		addComponent(container);
 		//addCabin(paint);
-		addHood(paint);
-		addTrunk(paint);
-		super.stroke();
 	}
 	
-	private void addHood(PhongMaterial paint) {
-		Hood hood = new Hood(container);
-		hood.construct(paint);
-		super.addHood(hood);
-	}
-
-	private void addCabin(PhongMaterial paint) {
-		Cabin cabin = new Cabin(container);
-		cabin.construct(paint);
-		super.addCabin(cabin);
-	}
-
-	private void addTrunk(PhongMaterial paint) {
-		Trunk trunk = new Trunk(container);
-		trunk.construct(paint);
-		super.addTrunk(trunk);
-	}
-
-	private void drawContainer(GraphicsContext g) {
-		g.setFill(Color.WHITESMOKE);
-		g.setStroke(Color.WHITESMOKE);
-		g.setLineWidth(1);
-		g.strokeRect(200,200,200,200);
-	}
 	
-	public void draw(GraphicsContext g) {
-		URL url = this.getClass().getClassLoader().getResource("malibu_front.jpg");
-		Image image = new Image(url.toString(),1000,500,true,true);
-		g.drawImage(image, (1000-image.getWidth())/2, 50);
-		drawContainer(g);
-		//super.draw(g);
-	}
 
 
 }

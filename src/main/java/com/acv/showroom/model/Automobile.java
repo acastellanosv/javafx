@@ -3,18 +3,16 @@ package com.acv.showroom.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.acv.showroom.texture.DynamicTextureNet;
 import com.acv.showroom.view.DrawComponent;
 
-import javafx.scene.Group;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 
-public abstract class Automobile extends Group{
+public abstract class Automobile extends TriangleMesh{
 
-	private Rotate r;
-	private Transform t = new Rotate();
+	private int points = 0;
+	private DynamicTextureNet texture;
 	private List<DrawComponent> components = new LinkedList<DrawComponent>();
 
 	public enum MAKE {CHEVROLET, FORD, TOYOTA, HONDA};
@@ -32,23 +30,10 @@ public abstract class Automobile extends Group{
 	}
 	
 	public void stroke() {
-		components.forEach(c->c.stroke(this));
 	}
 	
-	public void addComponent(Shape3D shape) {
-		this.getChildren().add(shape);
-	}
-	
-	public void addHood(Hood hood) {
-		components.add(hood);
-	}
-	
-	public void addCabin(Cabin cabin) {
-		components.add(cabin);
-	}
-	
-	public void addTrunk(Trunk trunk) {
-		components.add(trunk);
+	public void addComponent(DrawComponent shape) {
+		this.components.add(shape);
 	}
 	
 	public Text getTitle(){
@@ -57,19 +42,4 @@ public abstract class Automobile extends Group{
 		return text;
 	}
 	
-
-	public void rotateByX(int ang) {
-		r = new Rotate(ang, Rotate.X_AXIS);
-		t = t.createConcatenation(r);
-		this.getTransforms().clear();
-		this.getTransforms().addAll(t);
-	}
-
-	public void rotateByY(int ang) {
-		r = new Rotate(ang, Rotate.Y_AXIS);
-		t = t.createConcatenation(r);
-		this.getTransforms().clear();
-		this.getTransforms().addAll(t);
-	}
-
 }
