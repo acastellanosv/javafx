@@ -1,6 +1,6 @@
 package com.acv.showroom;
 
-import com.acv.showroom.view.MainView;
+import com.acv.showroom.view.MainPanel;
 
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
@@ -60,10 +60,9 @@ public class Showroom extends Application{
 //        camera.setTranslateZ(-1000);
 //        scene.setCamera(camera);
         
-	    MainView group = new MainView(WINDOW_WIDTH, WINDOW_HEIGHT);
-//	    ShowView group = new ShowView(WINDOW_WIDTH, WINDOW_HEIGHT);
+//	    MainView group = new MainView(WINDOW_WIDTH, WINDOW_HEIGHT);
+	    MainPanel group = new MainPanel(WINDOW_WIDTH, WINDOW_HEIGHT, 200);
 //        group.getChildren().add(label);
-	    group.render(Color.GREEN);
 	    
 //	    var label = new Label("Welcome to Showroom.");
 

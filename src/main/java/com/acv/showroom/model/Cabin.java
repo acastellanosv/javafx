@@ -1,30 +1,29 @@
 package com.acv.showroom.model;
 
+import com.acv.showroom.texture.DynamicTextureNet;
 import com.acv.showroom.view.DrawComponent;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 
 public class Cabin extends DrawComponent {
 
-	public Cabin(Box container) {
-		super(container);
+	private static final float topWidth = 200.0f;
+	private static final float topHeight = 200.0f;
+	private static final float bottomWidth = 200.0f;
+	private static final float bottomHeight = 200.0f;
+	private static final float topWidth2 = 200.0f;
+	private static final float topHeight2 = 200.0f;
+	private static final float bottomWidth2 = 200.0f;
+	private static final float bottomHeight2 = 200.0f;
+	private static final float shapeDepth = 200.0f;
+	private static final boolean front = true; 
+	private static final boolean back = true; 
+	
+	public Cabin(int points, Color color, DynamicTextureNet texture) {
+		super(topWidth, topHeight, bottomWidth, bottomHeight
+				, topWidth2, topHeight2, bottomWidth2, bottomHeight2
+				, shapeDepth, front, back,  points, texture);
 	}
 	
-	@Override
-	public void construct(PhongMaterial material) {
-		Box body = new Box((4)*(container.getWidth()/12), container.getHeight(), container.getDepth());
-		body.setTranslateX(-(4)*(container.getWidth()/12));
-		body.setMaterial(material);
-		addComponent(body);
-	}
-
-	@Override
-	public void draw(GraphicsContext g) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
