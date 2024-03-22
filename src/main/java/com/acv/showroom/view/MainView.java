@@ -7,9 +7,12 @@ import java.util.stream.Collectors;
 
 import com.acv.showroom.texture.DynamicTextureNet;
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
 import javafx.geometry.HPos;
 import javafx.scene.DepthTest;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -22,6 +25,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 public class MainView extends Pane{
 
@@ -37,12 +41,11 @@ public class MainView extends Pane{
 //		setDepthTest(DepthTest.ENABLE);
 //		TriangleMesh volume = new GeneratedVolume(0, 200, 10, x->Math.sin(x.doubleValue()), x->Math.cos(x.doubleValue()));
 //		TriangleMesh volume = new GeneratedVolume(0, 100, 10, f1 , f2);
-
 	}
 
 	public void render(Color color) {
 		PhongMaterial material = new PhongMaterial(color);
-//		material.setDiffuseColor(color);
+		material.setDiffuseColor(color);
 //		material.setSpecularColor(color);
 		List<Region> textures = generateTextures();
 		DynamicTextureNet imageNet = new DynamicTextureNet(color, textures);
@@ -61,6 +64,7 @@ public class MainView extends Pane{
 //		TriangleMesh volume = getTwoFacesMesh((float)shapeWidth, (float)shapeHeight, (float)shapeDepth);
     
 		meshView = new MeshView(volume);
+		meshView.setBlendMode(BlendMode.ADD);
 		pivotX = 0;
 		pivotY = 0;
 		pivotZ = -shapeDepth/2;
@@ -73,7 +77,8 @@ public class MainView extends Pane{
 		// try commenting this line out to see what it's effect is . . .
 		meshView.setDrawMode(DrawMode.FILL);
 		this.getChildren().add(meshView);
-
+		rotateByX(40);
+		rotateAroundYAxis();
 	}
 
 	private TriangleMesh generateShape(double topWidth, double topHeight, double bottomWidth, double bottomHeight 
@@ -101,8 +106,16 @@ public class MainView extends Pane{
 		return textures;
 	}
 
-	
-
+    public void rotateAroundYAxis() {
+        RotateTransition rotate = new RotateTransition(Duration.seconds(10), this.meshView);
+        rotate.setFromAngle(0);
+        rotate.setToAngle(360);
+        rotate.setAxis(Rotate.Y_AXIS);
+        rotate.setCycleCount(RotateTransition.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.play();
+    }
+    
 	public Rotate rotateByX(double ang) {
 		Rotate r = new Rotate(ang, pivotX, pivotY, pivotZ, Rotate.X_AXIS);
 		//rect.getTransforms().clear();

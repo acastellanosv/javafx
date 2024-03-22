@@ -38,6 +38,10 @@ public abstract class Automobile extends TriangleMesh implements AutoPart{
 		return this.color;
 	}
 	
+	public float getDepthOffset() {
+		return depthOffset;
+	}
+	
 	public abstract List<DrawComponent> getHood();
 	public abstract List<DrawComponent> getCabin();
 	public abstract List<DrawComponent> getTrunk();

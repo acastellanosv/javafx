@@ -9,17 +9,17 @@ import com.acv.showroom.view.DrawComponent;
 
 public class Trunk implements AutoPart {
 
-	private static final float topWidth 		= 200.0f;
-	private static final float bottomWidth 		= 200.0f;
-	private static final float topWidth2 		= 200.0f;
-	private static final float bottomWidth2 	= 200.0f;
+	private static final float topWidth 		= 250.0f;
+	private static final float bottomWidth 		= 250.0f;
+	private static final float topWidth2 		= 250.0f;
+	private static final float bottomWidth2 	= 250.0f;
 
 	private static final float topHeight 		= -25.0f;
 	private static final float bottomHeight 	= 200.0f;
 	private static final float topHeight2 		= -75.0f;
 	private static final float bottomHeight2 	= 200.0f;
 
-	private static final float shapeDepth 		= 100.0f;
+	private static final float shapeDepth 		= 130.0f;
 	
 	private static final boolean front = false; 
 	private static final boolean back = true; 

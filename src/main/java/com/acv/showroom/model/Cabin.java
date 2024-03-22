@@ -9,10 +9,10 @@ import com.acv.showroom.view.DrawComponent;
 
 public class Cabin implements AutoPart {
 
-	private static final float topWidth 		= 200.0f;
-	private static final float bottomWidth 		= 200.0f;
-	private static final float topWidth2 		= 200.0f;
-	private static final float bottomWidth2 	= 200.0f;
+	private static final float topWidth 		= 250.0f;
+	private static final float bottomWidth 		= 250.0f;
+	private static final float topWidth2 		= 250.0f;
+	private static final float bottomWidth2 	= 250.0f;
 
 	private static final float topHeight 		= 100.0f;
 	private static final float bottomHeight 	= 200.0f;

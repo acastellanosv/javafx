@@ -10,6 +10,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -63,7 +64,7 @@ public class Showroom extends Application{
         
 //	    MainView group = new MainView(WINDOW_WIDTH, WINDOW_HEIGHT);
 //	    group.render(Color.GOLDENROD);
-	    MainPanel group = new MainPanel(WINDOW_WIDTH, WINDOW_HEIGHT, 500);
+	    MainPanel group = new MainPanel(WINDOW_WIDTH, WINDOW_HEIGHT);
 //        group.getChildren().add(label);
 	    
 //	    var label = new Label("Welcome to Showroom.");
@@ -74,15 +75,10 @@ public class Showroom extends Application{
 //      root.setRotationAxis(Rotate.Y_AXIS);
 //      root.setRotate(30);
         
-		Scene scene = new Scene(group, WINDOW_WIDTH, WINDOW_HEIGHT);
-//        scene.setFill(Color.SILVER);
+		Scene scene = new Scene(group, WINDOW_WIDTH, WINDOW_HEIGHT, false, SceneAntialiasing.BALANCED);
+//		Scene scene = new Scene(group, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
-		
-//        PerspectiveCamera camera = new PerspectiveCamera();
-//      camera.setTranslateX(-(box.getWidth()) / 2);
-//      camera.setTranslateY(-(box.getHeight()) / 2);
-//      camera.setTranslateZ(-400);
-//        scene.setCamera(camera);
+//		addCamera(scene);
 
 	    /*
         //Add mouse control
@@ -139,6 +135,9 @@ public class Showroom extends Application{
 
     private PerspectiveCamera addCamera(Scene scene) {
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(false);
+//    camera.setTranslateX(-(box.getWidth()) / 2);
+//    camera.setTranslateY(-(box.getHeight()) / 2);
+//    camera.setTranslateZ(-400);
         scene.setCamera(perspectiveCamera);
         return perspectiveCamera;
     }

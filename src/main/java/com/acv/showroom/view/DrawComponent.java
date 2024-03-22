@@ -47,7 +47,7 @@ public class DrawComponent extends TriangleMesh{
 		this.getPoints().addAll(getComponentPoints(depthOffset));
 		this.getTexCoords().addAll(texture.getTexturePoints());
         this.getFaces().addAll(getComponentFaces(pointsOffset));
-        //this.getFaceSmoothingGroups().addAll(getComponentSmooths());
+        this.getFaceSmoothingGroups().addAll(getComponentSmooths());
 	}
 	
 	private float[] getComponentPoints(float offset) {
@@ -99,15 +99,21 @@ public class DrawComponent extends TriangleMesh{
 	}
 
 	private int[] getComponentSmooths() {
-        int[] smooths = {
-          		0,0,
-          		1,1,
-          		2,2,
-          		3,3,
-          		4,4,
-          		5,5,
-          		6,6
-            };
+        List<Integer> smoothFaces = new ArrayList<>();
+        if(front) 
+        {
+        	smoothFaces.add(0);smoothFaces.add(0);
+        }
+        smoothFaces.add(1);smoothFaces.add(1);
+        if(front) 
+        {
+        	smoothFaces.add(2);smoothFaces.add(2);
+        }
+        smoothFaces.add(3);smoothFaces.add(3);
+        smoothFaces.add(4);smoothFaces.add(4);
+        smoothFaces.add(5);smoothFaces.add(5);
+            
+        int[] smooths = smoothFaces.stream().mapToInt(Integer::intValue).toArray();
         return smooths;
 	}
 	

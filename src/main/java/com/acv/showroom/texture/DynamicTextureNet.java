@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -24,6 +25,7 @@ public class DynamicTextureNet {
 		this.textures = textures.size();
 		this.dimension = getColsRows();
 		GridPane grid = new GridPane();
+//		grid.setBackground(Background.fill(Color.RED));
 		grid.setAlignment(Pos.CENTER);
 
 		float cols = (float)dimension.getX();

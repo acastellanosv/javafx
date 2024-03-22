@@ -1,12 +1,19 @@
 package com.acv.showroom.view;
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.scene.AmbientLight;
+import javafx.scene.PointLight;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 public class SmartView extends Pane {
 
@@ -16,22 +23,50 @@ public class SmartView extends Pane {
 	private int height;
 	private MeshView meshView;
 
-    public SmartView(int width, int height, int depth) {
+    public SmartView(int width, int height) {
 		this.width = width;
 		this.height = height;
     	this.meshView = new MeshView();
 		pivotX = 0;
 		pivotY = 0;
-		pivotZ = -depth/2;
 		meshView.setCullFace(CullFace.BACK);
 		meshView.setTranslateX((width/2)-pivotX);
 		meshView.setTranslateY((height/2)-pivotY);
 		meshView.setDrawMode(DrawMode.FILL);
+//		meshView.setDrawMode(DrawMode.LINE);
+		
+//		this.getChildren().add(new AmbientLight(Color.rgb(30, 30, 30)));
+//		this.getChildren().add(createPointLight(this.width / 3d, this.height / 13d));
+//		this.getChildren().add(createPointLight(2*(this.width / 3d), this.height / 13d));
+
     }
     
-    protected MeshView getMeshView(TriangleMesh triangleMesh) {
+	private PointLight createPointLight(double x, double y) {
+		PointLight light = new PointLight(Color.WHITE);
+		light.setTranslateX( x );
+		light.setTranslateY( y );
+		light.setTranslateZ(-this.width);
+
+		return light;
+	}
+	 
+	protected MeshView getMeshView(TriangleMesh triangleMesh) {
     	this.meshView.setMesh(triangleMesh);
     	return this.meshView;
+    }
+    
+    public void setPivotZ(float depth) {
+		pivotZ = -depth/2;
+    }
+    
+    public void rotateAroundYAxis() {
+        RotateTransition rotate = new RotateTransition(Duration.seconds(4.5), this.meshView);
+        rotate.setFromAngle(0);
+        rotate.setToAngle(360);
+        rotate.setAxis(Rotate.Y_AXIS);
+        rotate.setCycleCount(RotateTransition.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.play();
     }
     
 	public Rotate rotateByX(double ang) {

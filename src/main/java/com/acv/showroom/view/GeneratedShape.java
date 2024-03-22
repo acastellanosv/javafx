@@ -42,10 +42,10 @@ public class GeneratedShape extends TriangleMesh{
 			double widthBottom2 = widthBottomFx.apply(widthBottom1,x);
 			double heightBottom2 = heightBottomFx.apply(heightBottom1, x);
 			double d = depth;
-			System.out.println("widthTop="+widthTop1+"->"+widthTop2);
-			System.out.println("heightTop="+heightTop1+"->"+heightTop2);
-			System.out.println("widthBottom="+widthBottom1+"->"+widthBottom2);
-			System.out.println("heightBottom="+heightBottom1+"->"+heightBottom2);
+//			System.out.println("widthTop="+widthTop1+"->"+widthTop2);
+//			System.out.println("heightTop="+heightTop1+"->"+heightTop2);
+//			System.out.println("widthBottom="+widthBottom1+"->"+widthBottom2);
+//			System.out.println("heightBottom="+heightBottom1+"->"+heightBottom2);
 			TriangleMesh t = createVolumeSection((float)widthTop1, (float)heightTop1
 					, (float)widthBottom1, (float)heightBottom1
 					, (float)widthTop2, (float)heightTop2
