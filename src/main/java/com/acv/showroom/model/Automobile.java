@@ -1,24 +1,19 @@
 package com.acv.showroom.model;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.acv.showroom.texture.DynamicTextureNet;
 import com.acv.showroom.view.DrawComponent;
 
-import javafx.geometry.HPos;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Text;
 
-public abstract class Automobile extends TriangleMesh{
+public abstract class Automobile extends TriangleMesh implements AutoPart{
 
-	private int totalPoints = 0;
+	private int pointsOffset = 0;
+	private float depthOffset = 0.0f;
 	private Color color;
 	private List<DrawComponent> components = new LinkedList<DrawComponent>();
 
@@ -43,37 +38,43 @@ public abstract class Automobile extends TriangleMesh{
 		return this.color;
 	}
 	
-	public abstract void addCabin();
-	
+	public abstract List<DrawComponent> getHood();
+	public abstract List<DrawComponent> getCabin();
+	public abstract List<DrawComponent> getTrunk();
+
+	@Override
+	public List<DrawComponent> getAutoParts() {
+		List<DrawComponent> autoParts = new ArrayList<DrawComponent>();
+		autoParts.addAll(getHood());
+		autoParts.addAll(getCabin());
+		autoParts.addAll(getTrunk());
+		return autoParts;
+	}
+
+
 	public void stroke() {
-		addCabin();
-		this.components.forEach(t->{
-			this.getPoints().addAll(t.getPoints());
-//			points = this.getPoints().size()/3;
-			this.getTexCoords().addAll(t.getTexCoords());
-			this.getFaces().addAll(t.getFaces());
+		addComponents(getAutoParts());
+		this.components.forEach(shape->{
+			shape.stroke(pointsOffset, depthOffset);
+			this.getPoints().addAll(shape.getPoints());
+			this.getTexCoords().addAll(shape.getTexCoords());
+			this.getFaces().addAll(shape.getFaces());
+			this.getFaceSmoothingGroups().addAll(shape.getFaceSmoothingGroups());
+			this.pointsOffset += shape.getPoints().size()/3;
+			this.depthOffset += shape.getDepth();
 		});
 	}
 	
-	public void addComponent(DrawComponent shape) {
-		this.totalPoints += shape.getPoints().size()/3;
+	private void addComponents(List<DrawComponent> shapes) {
+		shapes.forEach(shape->{
+			addComponent(shape);
+		});
+	}
+
+	private void addComponent(DrawComponent shape) {
 		this.components.add(shape);
 	}
 
-	public List<Region> generateTextures() {
-		String labels[] = {"FN","RG","BK","LF","BM","TP"};
-		List<Region> textures = Arrays.stream(labels)
-				.map(text->new Label(text))
-				.peek(label->GridPane.setHalignment(label, HPos.CENTER))
-				.collect(Collectors.toList());
-//		label1.setRotate(90);
-		return textures;
-	}
-
-	public int getTotalPoints() {
-		return totalPoints;
-	}
-	
 	public Text getTitle(){
 		Text text = new Text();
 		text.setText(new StringBuilder().append(this.make.name()).append(" ").append(model).append(" ").append(year).toString());

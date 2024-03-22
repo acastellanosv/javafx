@@ -10,14 +10,17 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 
 public class DynamicTextureNet {
 
 	private Image image;
 	private int textures;
 	private Point2D dimension;
+	private Color color;
 	
-	public DynamicTextureNet(List<Region> textures) {
+	public DynamicTextureNet(Color color, List<Region> textures) {
+		this.color = color;
 		this.textures = textures.size();
 		this.dimension = getColsRows();
 		GridPane grid = new GridPane();
@@ -55,9 +58,15 @@ public class DynamicTextureNet {
 
 	}
 	
+	public Color getColor() {
+		return this.color;
+	}
+	
 	public Image getImage() {
 		return this.image;
 	}
+	
+	
 	/*
      *  texture coord:
      *  0     1

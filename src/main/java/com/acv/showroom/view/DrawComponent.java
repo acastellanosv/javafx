@@ -3,33 +3,71 @@ package com.acv.showroom.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.acv.showroom.domain.ComponentDimensions;
 import com.acv.showroom.texture.DynamicTextureNet;
 
 import javafx.scene.shape.TriangleMesh;
 
 public class DrawComponent extends TriangleMesh{
 	
-	public DrawComponent(float widthTop1, float heightTop1
-			, float widthBottom1, float heightBottom1
-			, float widthTop2, float heightTop2
-			, float widthBottom2, float heightBottom2
-			, float depth, boolean front, boolean back,  int points, DynamicTextureNet texture){
-		float[] thesePoints = {
-                -widthBottom1/2, heightBottom1/2, 0, // idx p0
-                -widthTop1/2, -heightTop1/2, 0, // idx p1
-                widthBottom1/2,  heightBottom1/2, 0, // idx p2
-                widthTop1/2, -heightTop1/2, 0  // idx p3
-                ,
-                widthBottom2/2,  heightBottom2/2, -depth, // idx p4
-                widthTop2/2, -heightTop2/2, -depth,  // idx p5
-                -widthBottom2/2,  heightBottom2/2, -depth, // idx p6
-                -widthTop2/2, -heightTop2/2, -depth // idx p7
-        };
-		this.getPoints().addAll(thesePoints);
+	float widthTop1; 
+	float heightTop1;
+	float widthBottom1;
+	float heightBottom1;
+	float widthTop2;
+	float heightTop2;
+	float widthBottom2;
+	float heightBottom2;
+	float depth;
+	boolean front;
+	boolean back;
+	DynamicTextureNet texture;
+	
+	public DrawComponent(ComponentDimensions dimensions, DynamicTextureNet texture){
+		this.widthTop1 = dimensions.getTopWidth();
+		this.heightTop1 = dimensions.getTopHeight();
+		this.widthBottom1 = dimensions.getBottomWidth();
+		this.heightBottom1 = dimensions.getBottomHeight();
+		this.widthTop2 = dimensions.getTopWidth2();
+		this.heightTop2 = dimensions.getTopHeight2();
+		this.widthBottom2 = dimensions.getBottomWidth2();
+		this.heightBottom2 = dimensions.getBottomHeight2();
+		this.depth = dimensions.getShapeDepth();
+		this.front = dimensions.isFront();
+		this.back = dimensions.isBack();
+
+		this.texture = texture;		
+	}
+	
+	public float getDepth() {
+		return this.depth;
+	}
+	
+	public void stroke(int pointsOffset, float depthOffset) {
+		this.getPoints().addAll(getComponentPoints(depthOffset));
 		this.getTexCoords().addAll(texture.getTexturePoints());
-		
+        this.getFaces().addAll(getComponentFaces(pointsOffset));
+        //this.getFaceSmoothingGroups().addAll(getComponentSmooths());
+	}
+	
+	private float[] getComponentPoints(float offset) {
+		float[] thesePoints = {
+                -widthBottom1/2, heightBottom1/2, 0-offset, // idx p0
+                -widthTop1/2, -heightTop1/2, 0-offset, // idx p1
+                widthBottom1/2,  heightBottom1/2, 0-offset, // idx p2
+                widthTop1/2, -heightTop1/2, 0-offset  // idx p3
+                ,
+                widthBottom2/2,  heightBottom2/2, -depth-offset, // idx p4
+                widthTop2/2, -heightTop2/2, -depth-offset,  // idx p5
+                -widthBottom2/2,  heightBottom2/2, -depth-offset, // idx p6
+                -widthTop2/2, -heightTop2/2, -depth-offset // idx p7
+        };
+		return thesePoints;
+	}
+
+	private int[] getComponentFaces(int points) {
 		int[] texCoords = texture.getTextCoords();
-		int texIdx = 0;
+		//int texIdx = 0;
         List<Integer> faces = new ArrayList<>();
         if(front) 
         {
@@ -57,8 +95,10 @@ public class DrawComponent extends TriangleMesh{
         faces.add(points+3); faces.add(texCoords[33]); faces.add(points+5); faces.add(texCoords[34]); faces.add(points+7); faces.add(texCoords[35]);
         
         int[] facesPoints = faces.stream().mapToInt(Integer::intValue).toArray();
-        this.getFaces().addAll(facesPoints);
+        return facesPoints;
+	}
 
+	private int[] getComponentSmooths() {
         int[] smooths = {
           		0,0,
           		1,1,
@@ -68,9 +108,7 @@ public class DrawComponent extends TriangleMesh{
           		5,5,
           		6,6
             };
-
-        this.getFaceSmoothingGroups().addAll(smooths);
-        
+        return smooths;
 	}
-
+	
 }

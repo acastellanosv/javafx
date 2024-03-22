@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.acv.showroom.texture.DynamicTextureNet;
 
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.TriangleMesh;
 
 public class GeneratedShape extends TriangleMesh{
@@ -64,7 +65,7 @@ public class GeneratedShape extends TriangleMesh{
 	}
 	
 	public void setTexture(List<Region> textures) {
-		this.texture = new DynamicTextureNet(textures);
+		this.texture = new DynamicTextureNet(Color.BEIGE, textures);
 	}
 
 	private TriangleMesh createVolumeSection(float widthTop1, float heightTop1

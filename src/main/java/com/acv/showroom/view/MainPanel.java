@@ -31,12 +31,11 @@ public class MainPanel extends SmartView{
 		title.translateXProperty().set(-(width/2)+title.getBoundsInParent().getWidth());
 		title.translateYProperty().set(-(height/2)+title.getBoundsInParent().getHeight());
         this.getChildren().add(title);	
-        auto.stroke();
 		MeshView meshView = super.getMeshView(auto);
 
 		PhongMaterial material = new PhongMaterial(auto.getColor());
 		List<Region> textures = generateTextures();
-		DynamicTextureNet imageNet = new DynamicTextureNet(textures);
+		DynamicTextureNet imageNet = new DynamicTextureNet(Color.BEIGE,textures);
 //		ImageView imageView = new ImageView(imageNet.getImage());
 //		this.getChildren().add(imageView);
 		material.setDiffuseMap(imageNet.getImage());

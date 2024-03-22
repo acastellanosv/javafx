@@ -45,7 +45,7 @@ public class MainView extends Pane{
 //		material.setDiffuseColor(color);
 //		material.setSpecularColor(color);
 		List<Region> textures = generateTextures();
-		DynamicTextureNet imageNet = new DynamicTextureNet(textures);
+		DynamicTextureNet imageNet = new DynamicTextureNet(color, textures);
 //		ImageView imageView = new ImageView(imageNet.getImage());
 //		this.getChildren().add(imageView);
 		material.setDiffuseMap(imageNet.getImage());
@@ -78,10 +78,14 @@ public class MainView extends Pane{
 
 	private TriangleMesh generateShape(double topWidth, double topHeight, double bottomWidth, double bottomHeight 
 			, double shapeDepth, double depthStep, DynamicTextureNet imageNet) {
-		BiFunction<Double, Double, Double> wtf = (w,x)->(w*1);
+		BiFunction<Double, Double, Double> wtf = (w,x)->(w);
+//		BiFunction<Double, Double, Double> htf = (h,x)->(h);
+		BiFunction<Double, Double, Double> wbf = (w,x)->(w);
+		BiFunction<Double, Double, Double> hbf = (h,x)->(h);
+//		BiFunction<Double, Double, Double> wtf = (w,x)->(w+(100*(x+1)));
 		BiFunction<Double, Double, Double> htf = (h,x)->(h+(100*(x+1)));
-		BiFunction<Double, Double, Double> wbf = (w,x)->(w*1);
-		BiFunction<Double, Double, Double> hbf = (h,x)->(h*1);
+//		BiFunction<Double, Double, Double> wbf = (w,x)->(w+(100*(x+1)));
+//		BiFunction<Double, Double, Double> hbf = (h,x)->(h+(100*(x+1)));
 		TriangleMesh volume = new GeneratedShape(topWidth, topHeight, bottomWidth, bottomHeight
 				, shapeDepth, depthStep, wtf, htf, wbf, hbf, imageNet);
 		return volume;
